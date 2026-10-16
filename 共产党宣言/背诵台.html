@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>《共产党宣言》背诵台</title>
+<style>
+:root{
+  --bg:#f7f6f3; --card:#ffffff; --ink:#23201c; --muted:#7a736a;
+  --line:#e2ded6; --red:#a3312a; --red-soft:#f6e9e7;
+  --gold:#8a6b1f; --green:#3f6b4a; --blue:#2f5878;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 6px 18px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Songti SC","SimSun","Noto Serif CJK SC",Georgia,serif;
+  font-size:15px; line-height:1.85;
+}
+.wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+header{border-bottom:2px solid var(--red);padding-bottom:14px;margin-bottom:22px;}
+h1{margin:0 0 4px;font-size:23px;letter-spacing:.06em;}
+.sub{color:var(--muted);font-size:13px;}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px;align-items:center;}
+button{
+  font-family:inherit;font-size:13px;cursor:pointer;
+  background:var(--card);color:var(--ink);border:1px solid var(--line);
+  padding:6px 13px;border-radius:20px;transition:.15s;
+}
+button:hover{border-color:var(--red);color:var(--red);}
+button.on{background:var(--red);color:#fff;border-color:var(--red);}
+.groupbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.chip{
+  font-size:12px;padding:3px 9px;border-radius:12px;
+  background:#fff;border:1px solid var(--line);color:var(--muted);
+}
+.chip.on{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.meta{display:flex;justify-content:space-between;align-items:center;
+  font-size:12.5px;color:var(--muted);margin:6px 0 16px;gap:12px;flex-wrap:wrap;}
+.stat b{color:var(--red);font-weight:600;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.card.unknown{border-left:4px solid var(--red);}
+.card.known{border-left:4px solid var(--green);}
+.chead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.nid{font-size:12px;color:#fff;background:var(--blue);
+  padding:1px 8px;border-radius:10px;font-family:inherit;flex:none;}
+.cname{font-size:16px;font-weight:600;}
+.cchap{font-size:12px;color:var(--muted);}
+.body{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);}
+.row{margin-bottom:9px;}
+.row:last-child{margin-bottom:0;}
+.lab{font-size:11.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:2px;}
+.txt{font-size:14.5px;}
+.txt.q{color:var(--ink);}
+.hide .txt.answer{color:transparent;background:var(--line);
+  border-radius:3px;user-select:none;transition:.2s;}
+.hide .txt.answer.revealed{color:var(--ink);background:#fdf6ea;}
+.actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.actions button{font-size:12px;padding:4px 11px;}
+.okbtn.on{background:var(--green);border-color:var(--green);color:#fff;}
+.nobtn.on{background:var(--red);border-color:var(--red);color:#fff;}
+footer{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);}
+kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:0 5px;font-size:11px;font-family:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>《共产党宣言》背诵台</h1>
+  <div class="sub">按节点串背 · 可自测 · 进度保存在本机浏览器</div>
+</header>
+
+<div class="controls">
+  <button id="mBrowse" class="on">📖 浏览模式</button>
+  <button id="mTest">✍️ 自测模式（隐藏原文）</button>
+  <button id="mWeak">🎯 只练未掌握</button>
+</div>
+<div class="groupbar" id="chaps"></div>
+
+<div class="meta">
+  <div class="stat">共 <b id="cntAll">0</b> 个节点 · 已标记掌握 <b id="cntOk">0</b> · 待练 <b id="cntNo">0</b></div>
+  <div>
+    <button id="revealAll">全部显示答案</button>
+    <button id="hideAll">全部隐藏答案</button>
+    <button id="reset">清空进度</button>
+  </div>
+</div>
+
+<div id="list"></div>
+
+<footer>
+  数据依据：桌面 README.md（中央编译局译本，据《马克思恩格斯全集》第四卷）。
+  编号与同目录 <kbd>01_论证逻辑</kbd> <kbd>03_背诵手册</kbd> 一致。
+</footer>
+</div>
+
+<script>
+const DATA = [
+["引","引言","幽灵与合法性","一个幽灵，共产主义的幽灵，在欧洲游荡。","共产主义已经被欧洲的一切势力公认为一种势力。","把“被围剿”反转成“被承认”，取得发言资格"],
+["1.1","一","阶级斗争是常态","至今一切社会的历史都是阶级斗争的历史。","资产阶级时代……使阶级对立简单化了。整个社会日益分裂为两大敌对的阵营，分裂为两大相互直接对立的阶级：资产阶级和无产阶级。","立全书公理，推出资产阶级时代把对立简单化了"],
+["1.2","一","资产阶级的生成史","从中世纪的农奴中产生了初期城市的市民（自由民）；","现代资产阶级本身是一个长期发展过程的产物，是生产方式和交换方式的一系列变革的产物。","它是被市场扩张一步步逼出来的"],
+["1.3","一","资产阶级的政治进程","资产阶级每一个阶段的这种发展，都伴随着在政治上取得相应的进展。","现代的国家政权只不过是管理整个资产阶级的共同事务的一个委员会罢了。","经济地位涨一分，政治地位涨一分"],
+["1.4","一","资产阶级的革命作用","资产阶级在历史上，也曾经起过非常革命的作用。","资产阶级在不到一百年的阶级统治中所创造的生产力，比过去一切世代所创造的全部生产力加起来还要大，还要多。","十段赞美，把评判标准锁死为“能否解放生产力”"],
+["1.5","一","模板①封建制怎么死","由此可见，资产阶级赖以形成的生产资料和交换手段，是在封建社会里造成的。","取而代之的是自由竞争以及与自由竞争相适应的社会制度和政治制度、资产阶级的经济统治和政治统治。","第一次演示“生产力 vs 生产关系”"],
+["1.6","一","模板②套回你自己","现在，在我们眼前又进行着类似的运动。","资产阶级的关系已经太狭窄了，再容纳不了它本身所创造的财富。","危机反复、生产过剩的瘟疫、自救只会加重"],
+["1.7","一","两个转折句（转轴）","资产阶级用来推翻封建制度的武器，现在却对准资产阶级自己。","资产阶级不仅锻造了置自身于死地的武器；同时它还造就了将要运用这种武器来反对它的人——现代的工人，即无产者。","全书转轴，视角从“它”转向“他们”"],
+["1.8","一","无产阶级的处境","随着资产阶级即资本愈发展，无产阶级即现代工人阶级也在同一程度上愈得到发展；","无产阶级的队伍就是这样从居民的所有阶级中得到补充。","工人是商品、机器附属品，队伍还不断扩大"],
+["1.9","一","斗争的五阶段","无产阶级经历了各个不同的发展阶段。它反对资产阶级的斗争是和它的存在同时开始。","他们斗争的真正成果并不是直接取得实际利益，而是工人的越来越大的团结。","打机器→帮别人打→抱团→连成一片→建党"],
+["1.10","一","发展的三个来源","旧社会内部的所有冲突在许多方面都促进了无产阶级的发展。","正像过去贵族中有一部分人转到资产阶级方面一样，现在资产阶级中也有一部分人，转到无产阶级方面来。","连资产阶级都在当教官"],
+["1.11","一","阶级鉴定","在当前同资产阶级对立的一切阶级中，只有无产阶级是真正革命的阶级。","说他们是革命的，那是指他们行将转入到无产阶级的队伍里来。","中间等级反动、流氓无产可被收买"],
+["1.12","一","为什么摧毁一切","在无产阶级的生活条件中，旧社会的生活条件已经被消灭。","无产阶级的运动是绝大多数人为绝大多数人的独立自主谋利益的运动。","过去运动是少数人的，这次是绝大多数人的"],
+["1.13","一","为什么统治不下去","我们已经看到，至今的一切社会都是建立在压迫阶级和被压迫阶级的对立之上。","资产阶级再无法统治下去……社会再不能在它们统治下继续运转下去，就是说，它的存在不再同社会相容。","连让奴隶活下去的最低门槛都守不住"],
+["1.14","一","结论：掘墓人","资产阶级赖以生存和统治的根本条件，是财富在私人手里的积累，是资本的形成和增殖；","它首先生产的是它自身的掘墓人。资产阶级的灭亡和无产阶级的胜利是同样不可避免的。","抽掉最底下那块砖 → 两个不可避免"],
+["2.1","二","党的定位","共产党人同全体无产者的关系是怎样的呢？","这些原理不过是现在正在进行的阶级斗争和我们眼前的历史运动的真实关系的一般表述。","六条否定式定位＋理论不是发明而是表述"],
+["2.2","二","消灭私有制","这些原理不过是现在正在进行的阶级斗争和我们眼前的历史运动的真实关系的一般表述。","共产党人可以把自己的理论概括为一句话：消灭私有制。","所有制本就在更替 → 一句话说完"],
+["2.3","二","反驳①财产","有人责备我们共产党人，说我们要消灭个人挣得的、自己劳动得来的财产……","这种劳动所创造的是资本，即剥削雇佣劳动所得到的财产。","“勤劳所得”早被大工业消灭了"],
+["2.4","二","└ 资本的社会性","做一个资本家，这就是说，他在生产中不仅占有一种纯粹个人的地位……","这时所改变的只是财产的社会性质。它将失掉它的阶级性质。","资本本是集体产物，收归公共只是认领"],
+["2.5","二","└ 雇佣劳动","现在，我们来看看雇佣劳动。","在资产阶级社会里是过去支配现在，在共产主义社会里是现在支配过去。","工资=最低生活资料；两条对称句"],
+["2.6","二","反驳②个性与自由","我们要消灭私有制，你们就惊慌起来。","共产主义并不剥夺任何人占有社会产品的权力，它只剥夺利用这种占有去奴役他人劳动的权力。","自由=自由贸易；个性=资产者的个性"],
+["2.7","二","反驳③懒惰","有人反驳说，私有制一消灭，一切活动就会停止，懒惰之风就会兴起。","因为在这个社会里是劳者不获，获者不劳。","最短的一节，归谬"],
+["2.8","二","反驳④教育","所有这些对共产主义的物质产品的占有方式和生产方式的责备，也被扩及到精神产品的占有和生产方面。","你们的观念本身是资产阶级的生产关系和所有制关系的产物……由你们这个阶级的物质生活条件来决定的。","历史唯物主义的核心表述"],
+["2.9","二","反驳⑤家庭","消灭家庭！连极端的激进派也对共产党人的这种“可耻”的意图表示愤慨。","共产党人并没有发明社会对教育的影响；他们仅仅是要改变这种影响的性质，要使教育摆脱统治阶级的影响。","家庭建立在资本上；承认“消灭父母对子女的剥削”"],
+["2.10","二","反驳⑥公妻制","但是，你们共产党人是要实行公妻制的啊，——整个资产阶级异口同声地向我们这样叫喊。","资产阶级的婚姻实际上是公妻制。","你们的婚姻本来就是"],
+["2.11","二","反驳⑦祖国与民族","还有人责备共产党人，说他们要取消祖国，取消民族。","人对人的剥削一消灭，民族对民族的剥削就会随之消灭。","内部剥削决定民族压迫"],
+["2.12","二","反驳⑧意识形态总清算","从宗教的、哲学的和一般意识形态的观点对共产主义提出的种种责难，都不值得详细讨论。","共产主义革命就是同传统的所有制关系实行最彻底的决裂；毫不奇怪，它在自己的发展进程中要同传统的观念实行最彻底的决裂。","统治思想是统治阶级的思想；两个决裂"],
+["2.13","二","行动纲领","前面我们已经看到，工人革命的第一步就是使无产阶级上升为统治阶级，争得民主。","这些措施在不同的国家里当然会不同。","十条措施＝剥夺①②③④／集中⑤⑥⑦／改造⑧⑨⑩"],
+["2.14","二","终点：自由人联合体","当阶级差别在发展进程中已经消失而全部生产集中在联合起来的个人的手里的时候……","在那里，每个人的自由发展是一切人的自由发展的条件。","国家消亡 → 联合体"],
+["3.1","三","反动的社会主义","法国和英国的贵族，按照他们的历史地位所负的使命，就是写一些抨击现代资产阶级社会的作品。","工业中的行会制度，农业中的宗法经济，——这就是它的最后结论。","向后看：甲封建／乙小资／丙德国的“真正的”"],
+["3.2","三","保守的社会主义","资产阶级中的一部分人想要消除社会的弊病，以便保障资产阶级社会的生存。","资产阶级的社会主义就是这样一个论断：资产者之为资产者，是为了工人阶级的利益。","停住：要资产阶级，不要无产阶级"],
+["3.3","三","空想的社会主义","本来意义的社会主义和共产主义的体系，圣西门、傅立叶、欧文等人的体系……出现。","批判的空想的社会主义和共产主义的意义，是同历史的发展成反比。","跳过：意义与历史发展成反比"],
+["4.1","四","法国","看过第二章之后，就可以了解共产党人同已经形成的工人政党的关系……","共产党人同社会主义民主党联合起来……但并不因此放弃对那些……空谈和幻想采取批判态度的权利。","联合但不放弃批判"],
+["4.2","四","瑞士","在瑞士，共产党人支持激进派……","但是并不忽略这个政党是由互相矛盾的分子组成。","支持但不忽略成分复杂"],
+["4.3","四","波兰","在波兰人中间，共产党人支持那个把土地革命当做民族解放的条件的政党……","……即发动过1846年克拉科夫起义的政党。","土地革命＝民族解放的条件"],
+["4.4","四","德国","在德国，只要资产阶级采取革命的行动，共产党就同它一起去反对专制君主制……","共产党一分钟也不忽略教育工人尽可能明确地意识到资产阶级和无产阶级的敌对。","德国的资产阶级革命只能是无产阶级革命的直接序幕"],
+["4.5","四","三条总则","总之，共产党人到处都支持一切反对现存的社会制度和政治制度的革命运动。","在所有这些运动中，他们都特别强调所有制问题，把它作为运动的基本问题。","支持／所有制／国际团结"],
+["4.6","四","收尾与口号","共产党人不屑于隐瞒自己的观点和意图。","无产者在这个革命中失去的只是锁链。他们获得的将是整个世界。全世界无产者，联合起来！","不屑于隐瞒 → 锁链与世界 → 联合起来"]
+];
+
+const KEY='manifest_mem_v1';
+let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+let mode='browse', chap='ALL';
+const listEl=document.getElementById('list');
+const save=()=>localStorage.setItem(KEY, JSON.stringify(state));
+
+document.getElementById('chaps').innerHTML =
+  [['ALL','全部'],['引言','引言'],['一','第一章'],['二','第二章'],['三','第三章'],['四','第四章']]
+  .map(([v,t])=>`<span class="chip ${chap===v?'on':''}" data-c="${v}">${t}</span>`).join('');
+document.getElementById('chaps').onclick=e=>{
+  if(!e.target.dataset.c) return;
+  chap=e.target.dataset.c;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x.dataset.c===chap));
+  render();
+};
+
+function filtered(){
+  return DATA.filter(d=>(chap==='ALL'||d[1]===chap) &&
+    (mode!=='weak' || state[d[0]]!=='ok'));
+}
+
+function render(){
+  const rows=filtered();
+  listEl.innerHTML = rows.map(d=>{
+    const [id,ch,name,tri,end,what]=d;
+    const st=state[id]||'';
+    return `<div class="card ${st==='ok'?'known':(st==='no'?'unknown':'')}" data-id="${id}">
+      <div class="chead">
+        <span class="nid">${id}</span>
+        <span class="cname">${name}</span>
+        <span class="cchap">第${ch==='引言'?'':''}${ch}部分</span>
+      </div>
+      <div class="body ${mode==='test'?'hide':''}">
+        <div class="row"><div class="lab">触发句（原文起首）</div><div class="txt q answer">${tri}</div></div>
+        <div class="row"><div class="lab">落点句（本节必须停住的地方）</div><div class="txt q answer">${end}</div></div>
+        <div class="row"><div class="lab">这一节干什么</div><div class="txt answer">${what}</div></div>
+      </div>
+      <div class="actions">
+        <button class="okbtn ${st==='ok'?'on':''}" data-a="ok" data-id="${id}">✓ 掌握了</button>
+        <button class="nobtn ${st==='no'?'on':''}" data-a="no" data-id="${id}">✗ 还要练</button>
+        <button data-a="flip" data-id="${id}">👁 显示/隐藏</button>
+      </div>
+    </div>`;
+  }).join('') || '<div class="card">这个筛选下没有内容。</div>';
+  updStat();
+}
+
+function updStat(){
+  const total=DATA.length;
+  const ok=DATA.filter(d=>state[d[0]]==='ok').length;
+  const no=DATA.filter(d=>state[d[0]]==='no').length;
+  document.getElementById('cntAll').textContent=filtered().length;
+  document.getElementById('cntOk').textContent=ok;
+  document.getElementById('cntNo').textContent=no;
+}
+
+listEl.onclick=e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const id=b.dataset.id, a=b.dataset.a;
+  if(a==='ok'){state[id]= state[id]==='ok'?'':'ok';}
+  if(a==='no'){state[id]= state[id]==='no'?'':'no';}
+  if(a==='flip'){
+    const card=b.closest('.card');
+    card.querySelectorAll('.answer').forEach(x=>x.classList.toggle('revealed'));
+  }
+  save(); render();
+};
+
+const setMode=m=>{
+  mode=m;
+  ['mBrowse','mTest','mWeak'].forEach(k=>document.getElementById(k).classList.remove('on'));
+  document.getElementById({browse:'mBrowse',test:'mTest',weak:'mWeak'}[m]).classList.add('on');
+  render();
+};
+document.getElementById('mBrowse').onclick=()=>setMode('browse');
+document.getElementById('mTest').onclick=()=>setMode('test');
+document.getElementById('mWeak').onclick=()=>setMode('weak');
+document.getElementById('revealAll').onclick=()=>document.querySelectorAll('.answer').forEach(x=>x.classList.add('revealed'));
+document.getElementById('hideAll').onclick=()=>document.querySelectorAll('.answer').forEach(x=>x.classList.remove('revealed'));
+document.getElementById('reset').onclick=()=>{
+  if(confirm('确定清空全部掌握/待练标记？')){ state={}; save(); render(); }
+};
+
+render();
+</script>
+</body>
+</html>

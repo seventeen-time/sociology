@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>《国家与革命》背诵台</title>
+<style>
+:root{
+  --bg:#f7f6f3; --card:#ffffff; --ink:#23201c; --muted:#7a736a;
+  --line:#e2ded6; --red:#a3312a; --red-soft:#f6e9e7;
+  --gold:#8a6b1f; --green:#3f6b4a; --blue:#2f5878;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 6px 18px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Songti SC","SimSun","Noto Serif CJK SC",Georgia,serif;
+  font-size:15px; line-height:1.85;
+}
+.wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+header{border-bottom:2px solid var(--red);padding-bottom:14px;margin-bottom:22px;}
+h1{margin:0 0 4px;font-size:23px;letter-spacing:.06em;}
+.sub{color:var(--muted);font-size:13px;}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px;align-items:center;}
+button{
+  font-family:inherit;font-size:13px;cursor:pointer;
+  background:var(--card);color:var(--ink);border:1px solid var(--line);
+  padding:6px 13px;border-radius:20px;transition:.15s;
+}
+button:hover{border-color:var(--red);color:var(--red);}
+button.on{background:var(--red);color:#fff;border-color:var(--red);}
+.groupbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.chip{
+  font-size:12px;padding:3px 9px;border-radius:12px;
+  background:#fff;border:1px solid var(--line);color:var(--muted);
+}
+.chip.on{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.meta{display:flex;justify-content:space-between;align-items:center;
+  font-size:12.5px;color:var(--muted);margin:6px 0 16px;gap:12px;flex-wrap:wrap;}
+.stat b{color:var(--red);font-weight:600;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.card.unknown{border-left:4px solid var(--red);}
+.card.known{border-left:4px solid var(--green);}
+.chead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.nid{font-size:12px;color:#fff;background:var(--blue);
+  padding:1px 8px;border-radius:10px;font-family:inherit;flex:none;}
+.cname{font-size:16px;font-weight:600;}
+.cchap{font-size:12px;color:var(--muted);}
+.body{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);}
+.row{margin-bottom:9px;}
+.row:last-child{margin-bottom:0;}
+.lab{font-size:11.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:2px;}
+.txt{font-size:14.5px;}
+.hide .txt.answer{color:transparent;background:var(--line);
+  border-radius:3px;user-select:none;transition:.2s;}
+.hide .txt.answer.revealed{color:var(--ink);background:#fdf6ea;}
+.actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.actions button{font-size:12px;padding:4px 11px;}
+.okbtn.on{background:var(--green);border-color:var(--green);color:#fff;}
+.nobtn.on{background:var(--red);border-color:var(--red);color:#fff;}
+footer{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);}
+kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:0 5px;font-size:11px;font-family:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>《国家与革命》背诵台</h1>
+  <div class="sub">按节点串背 · 可自测 · 进度保存在本机浏览器</div>
+</header>
+
+<div class="controls">
+  <button id="mBrowse" class="on">📖 浏览模式</button>
+  <button id="mTest">✍️ 自测模式（隐藏原文）</button>
+  <button id="mWeak">🎯 只练未掌握</button>
+</div>
+<div class="groupbar" id="chaps"></div>
+
+<div class="meta">
+  <div class="stat">共 <b id="cntAll">0</b> 个节点 · 已标记掌握 <b id="cntOk">0</b> · 待练 <b id="cntNo">0</b></div>
+  <div>
+    <button id="revealAll">全部显示答案</button>
+    <button id="hideAll">全部隐藏答案</button>
+    <button id="reset">清空进度</button>
+  </div>
+</div>
+
+<div id="list"></div>
+
+<footer>
+  数据依据：桌面 <kbd>国家与革命.docx</kbd> 你的读书笔记（P6—P122），笔记未收录的序言与第六章第 1 节已据通行本补足并标〔补〕。
+  编号与同目录 <kbd>01_论证逻辑</kbd> <kbd>03_背诵手册</kbd> <kbd>04_必背锚句</kbd> 一致。
+</footer>
+</div>
+
+<script>
+const DATA = [
+["序","序","为什么现在谈国家问题","国家这个问题，无论在理论方面、或在实际政治方面，现在都有特别重大的意义。","首先研究马恩的国家学说（特别是被忘记/被曲解的部分）；其次研究考茨基；最后总结俄国1905、1917年革命经验","交代动机与全书计划（笔记未收录，据通行本补）"],
+["1.1","一","国家是阶级矛盾不可调和的产物","国家是承认：这个社会陷入了不可解决的自我矛盾，分裂为不可调和的对立面而又无力摆脱这些对立面。","国家是阶级矛盾不可调和的产物和表现……反过来说，国家的存在证明阶级矛盾不可调和","立公理，并立刻打两种歪曲（调和论/抹杀结论）"],
+["1.2","一","特殊的武装队伍、监狱等等","这种力量主要是什么呢？","主要是拥有监狱等等的特殊的武装队伍；因为文明社会已分裂为不可调和的敌对阶级，自动的武装组织不可能有","国家靠脱离人民的武装维持"],
+["1.3","一","国家是剥削被压迫阶级的工具","由于国家是从控制阶级对立的需要中产生的……","民主共和制是资本主义所能采用的最好的政治外壳；普选制是测量工人阶级成熟性的标尺","捐税国债、官吏特权；民主制的真实地位"],
+["1.4","一","国家自行消亡和暴力革命","国家不是“被废除”的，它是自行消亡的。（列宁：这样削剪就是机会主义）","无产阶级国家代替资产阶级国家，非通过暴力革命不可。无产阶级国家的消灭，即任何国家的消灭，只能通过“自行消亡”","五点辨析：谁消亡/什么性质/什么时候/反谁/暴力"],
+["2.1","二","革命的前夜（1847）","工人阶级在发展进程中将创造一个消除阶级和阶级对抗的联合体来代替旧的资产阶级社会。","国家即组织成为统治阶级的无产阶级；无产阶级所需要的只是逐渐消亡的国家","1847 提法还抽象；还不知用什么代替"],
+["2.2","二","革命的总结（1852）","一切变革都是使这个机器更加完备，而不是把它摧毁。","过去一切革命都是使国家机器更加完备，而这个机器是必须打碎，必须摧毁的","马克思的提法：不根据逻辑推论，而根据实际发展"],
+["2.3","二","1852年马克思对问题的提法","至于讲到我，无论是发现现代社会中有阶级存在或发现各阶级间的斗争，都不是我的功劳。","只有承认阶级斗争、同时也承认无产阶级专政的人，才是马克思主义者","给魏德迈的信；专政是试金石 ★第二版增补"],
+["2.4","二","寄生物与帝国主义","最能表明这个国家机器特征的有两种机构，即官吏和常备军。","官吏和常备军是资产阶级社会身上的“寄生物”……不是去改善国家机器，而是破坏它、消灭它","帝国主义使国家机器空前强化；1917年俄国实例"],
+["3.1","三","公社社员的英雄主义何在","马克思并没有固执己见，学究式地非难运动“不合时宜”。","“把官僚军事国家机器打碎”这几个字，已经简要地表明了……主要教训","马克思向运动学习，不作训诫（对比普列汉诺夫）"],
+["3.2","三","用什么来代替被打碎的国家机器","公社的第一个法令就是废除常备军而代之以武装的人民。","民主实行到最完全最彻底的程度，就由资产阶级民主转化成无产阶级民主，即由国家转化成一种已经不是原来意义上的国家的东西（量转化为质）","四项措施：军/选/薪/教；镇压者由少数变多数"],
+["3.3","三","取消议会制","公社是一个实干的而不是议会式的机构，它既是行政机关，同时也是立法机关。","没有代表机构，我们不可能想象什么民主……而没有议会制，我们却能够想象和应该想象","清谈馆→实干机构；要代表机构不要议会制"],
+["3.4","三","组织起民族的统一","民族的统一不是应该破坏，相反地应该借助于公社制度组织起来。","旧政府权力的纯属压迫性质的机关予以铲除，而合理职能则归还给社会的负责的公仆","自愿的民主的无产阶级集中制 vs 军阀官吏的集中制"],
+["3.5","三","消灭寄生虫式的国家","公社实现了所有资产阶级革命都提出的廉价政府这一口号。","国家官吏的特殊“长官职能”可以并且应该立即开始、在一天之内就开始用“监工和会计”的简单职能来代替","不是空想；职能简化→轮流→习惯→消亡"],
+["3.6","三","公社是“终于发现的”政治形式","公社的真正秘密就在于：它实质上是工人阶级的政府……","是终于发现的可以使劳动在经济上获得解放的政治形式；马克思并没有去发现这个未来的政治形式","马克思不发明形式，只从经验中看出"],
+["4.1","四","《住宅问题》","社会革命将怎样解决住宅问题呢？……既然我们不必为构建未来社会臆造种种空想方案。","这一切都需要有一定的国家形式，但决不需要那种公职人员享有特权地位的特殊的军事和官僚机构","过渡时期仍需国家形式；免费分配与完全消亡联系着"],
+["4.2","四","同无政府主义者的论战","试拿工厂、铁路、在汪洋大海上航行的轮船来说吧……如果没有一定的服从……那就没有一样能够开动起来。","革命无疑是天下最权威的东西；要是巴黎公社没有运用武装人民这个权威，它能支持哪怕一天吗","目的无分歧、手段有分歧；权威是相对的"],
+["4.3","四","给倍倍尔的信","自由的人民国家变成了自由国家……应当抛弃这一切关于国家的废话。","“巴黎公社已经不是原来意义上的国家”，——这是恩格斯在理论上最重要的论断","当无产阶级还需要国家时，它不是为了自由，而是为了镇压敌人"],
+["4.4","四","对爱尔福特纲领草案的批判","我们的党和工人阶级只有在民主共和国这种政治形式下，才能取得统治。","民主共和国是走向无产阶级专政的捷径；真正民主的集中制共和国赋予的自由比联邦制共和国要多","“真诚的”机会主义更危险；从什么到什么的过渡"],
+["4.5","四","1891年为《内战》写的导言","工人阶级一旦取得统治权，就不能继续运用旧的国家机器来进行管理……","为了防止国家和国家机关由社会公仆变为社会主人，公社采取了两个可靠的办法（撤换 + 工人工资）","彻底的民主变成社会主义；防止诡辩"],
+["4.6","四","恩格斯论民主制的消除","老是忘记国家的消灭也就是民主的消灭，国家的消亡也就是民主的消亡。","民主和少数服从多数的原则不是一个东西。民主就是承认少数服从多数的国家","民主是系统暴力的组织；习惯→不需要强制"],
+["4.7","四","迷信与党的名称","按照哲学概念，国家是“观念的实现”……由此产生了对国家的盲目崇拜。","对真正的政党说来，名称总是不完全符合的；党在发展，名称却不变","批判对国家迷信；名称不确切但不妨碍方向"],
+["5.1","五","马克思如何提出问题","在资本主义社会和共产主义社会之间，有一个从前者变为后者的革命转变时期。","同这个时期相适应的也有一个政治上的过渡时期，这个时期的国家只能是无产阶级的革命专政","专政≠只扩大民主，还要剥夺剥削者的自由"],
+["5.2","五","民主的三种形态","在资本主义社会里……比较完全的民主制度就是民主共和制。","极少数人享受民主，富人享受民主——这就是资本主义社会的民主制度；人民这个大多数享有民主，对剥削者实行强力镇压；民主愈完全，愈迅速地自行消亡","资本主义→过渡→共产主义；多数镇压少数代价小"],
+["5.3","五","共产主义社会的第一阶段","它在各方面，在经济、道德和精神方面都还带着它脱胎出来的那个旧社会的痕迹。","在共产主义下，在一定的时期内，不仅会保留资产阶级权利，甚至还会保留资产阶级国家，——但没有资产阶级！","按劳分配＝资产阶级权利；三句递进：正在消亡/还没完全消亡/需完全共产主义"],
+["5.4","五","共产主义社会的高级阶段","在劳动已经不仅仅是谋生的手段，而且本身成了生活的第一需要之后……","只有在那个时候……社会才能在自己的旗帜上写上：“各尽所能，按需分配”！国家完全消亡的经济基础就是共产主义的高度发展","三个“在……之后”；日期作为悬案"],
+["5.5","五","计算和监督","在一些最先进的资本主义国家中已经做到的人人都识字……","计算和监督——这就是把共产主义社会第一阶段“调整好”所必需的主要条件；从必须遵守变成习惯于遵守","资本主义已把管理简化；工厂纪律只是阶段"],
+["6.1","六","普列汉诺夫与无政府主义者的论战","这不是反驳伯恩施坦，同他进行论战，实际上是向他让步。","机会主义者所需要的，恰恰是把一切根本问题都“十分放心地留待将来去解决”","歪曲的第一形态：回避〔补〕"],
+["6.2","六","考茨基与机会主义者的论战","现在我们是反对党，到夺取政权以后我们再专门来谈。——革命不见了！","革命不应当是新的阶级利用旧的国家机器来指挥、管理，而应当是新的阶级打碎这个机器，利用新的机器来指挥、管理","拖延术；官僚制实质；三条对抗措施"],
+["6.3","六","考茨基与潘涅库克的论战","马克思主义者与无政府主义者之间的区别在于：(1)(2)(3)……","三条区别：何时消灭 / 用什么代替 / 怎样准备；无政府主义者完全没弄清用什么代替","全书最系统的对照表"],
+["6.4","六","决裂","当着国家……已经变成军事怪物……去屠杀千百万人的时候。","马克思教导我们要避免这两种错误：以敢于舍身的勇气去破坏全部旧的国家机器，同时又要具体地提问题；在社会主义下，所有的人将轮流来管理，因此很快就会习惯于不要任何人来管理","左右开弓；勇气+具体"]
+];
+
+const KEY='stateandrevolution_mem_v1';
+let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+let mode='browse', chap='ALL';
+const listEl=document.getElementById('list');
+const save=()=>localStorage.setItem(KEY, JSON.stringify(state));
+
+document.getElementById('chaps').innerHTML =
+  [['ALL','全部'],['序','序言'],['一','第一章'],['二','第二章'],['三','第三章'],['四','第四章'],['五','第五章'],['六','第六章']]
+  .map(([v,t])=>`<span class="chip ${chap===v?'on':''}" data-c="${v}">${t}</span>`).join('');
+document.getElementById('chaps').onclick=e=>{
+  if(!e.target.dataset.c) return;
+  chap=e.target.dataset.c;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x.dataset.c===chap));
+  render();
+};
+
+function filtered(){
+  return DATA.filter(d=>(chap==='ALL'||d[1]===chap) &&
+    (mode!=='weak' || state[d[0]]!=='ok'));
+}
+
+function render(){
+  const rows=filtered();
+  listEl.innerHTML = rows.map(d=>{
+    const [id,ch,name,tri,end,what]=d;
+    const st=state[id]||'';
+    return `<div class="card ${st==='ok'?'known':(st==='no'?'unknown':'')}" data-id="${id}">
+      <div class="chead">
+        <span class="nid">${id}</span>
+        <span class="cname">${name}</span>
+        <span class="cchap">${ch==='序'?'序言':'第'+ch+'章'}</span>
+      </div>
+      <div class="body ${mode==='test'?'hide':''}">
+        <div class="row"><div class="lab">触发句（这一节怎么起头）</div><div class="txt q answer">${tri}</div></div>
+        <div class="row"><div class="lab">落点句（本节必须停住的地方）</div><div class="txt q answer">${end}</div></div>
+        <div class="row"><div class="lab">这一节干什么</div><div class="txt answer">${what}</div></div>
+      </div>
+      <div class="actions">
+        <button class="okbtn ${st==='ok'?'on':''}" data-a="ok" data-id="${id}">✓ 掌握了</button>
+        <button class="nobtn ${st==='no'?'on':''}" data-a="no" data-id="${id}">✗ 还要练</button>
+        <button data-a="flip" data-id="${id}">👁 显示/隐藏</button>
+      </div>
+    </div>`;
+  }).join('') || '<div class="card">这个筛选下没有内容。</div>';
+  updStat();
+}
+
+function updStat(){
+  const ok=DATA.filter(d=>state[d[0]]==='ok').length;
+  const no=DATA.filter(d=>state[d[0]]==='no').length;
+  document.getElementById('cntAll').textContent=filtered().length;
+  document.getElementById('cntOk').textContent=ok;
+  document.getElementById('cntNo').textContent=no;
+}
+
+listEl.onclick=e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const id=b.dataset.id, a=b.dataset.a;
+  if(a==='ok'){state[id]= state[id]==='ok'?'':'ok';}
+  if(a==='no'){state[id]= state[id]==='no'?'':'no';}
+  if(a==='flip'){
+    b.closest('.card').querySelectorAll('.answer').forEach(x=>x.classList.toggle('revealed'));
+  }
+  save(); render();
+};
+
+const setMode=m=>{
+  mode=m;
+  ['mBrowse','mTest','mWeak'].forEach(k=>document.getElementById(k).classList.remove('on'));
+  document.getElementById({browse:'mBrowse',test:'mTest',weak:'mWeak'}[m]).classList.add('on');
+  render();
+};
+document.getElementById('mBrowse').onclick=()=>setMode('browse');
+document.getElementById('mTest').onclick=()=>setMode('test');
+document.getElementById('mWeak').onclick=()=>setMode('weak');
+document.getElementById('revealAll').onclick=()=>document.querySelectorAll('.answer').forEach(x=>x.classList.add('revealed'));
+document.getElementById('hideAll').onclick=()=>document.querySelectorAll('.answer').forEach(x=>x.classList.remove('revealed'));
+document.getElementById('reset').onclick=()=>{
+  if(confirm('确定清空全部掌握/待练标记？')){ state={}; save(); render(); }
+};
+
+render();
+</script>
+</body>
+</html>

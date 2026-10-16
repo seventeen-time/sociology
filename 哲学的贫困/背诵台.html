@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>《哲学的贫困》背诵台</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1f2430; --ink2:#5a6478; --line:#dfe3ec;
+    --accent:#2f6fdb; --accent-soft:#e8f0fd; --ok:#1f8a4c; --ok-soft:#e6f5ec;
+    --weak:#c2410c; --weak-soft:#fdece0; --shadow:0 1px 3px rgba(20,30,60,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:1140px;margin:0 auto;padding:22px 18px 60px}
+  h1{font-size:21px;margin:0 0 4px}
+  .sub{color:var(--ink2);font-size:13px;margin-bottom:16px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  button,select,input[type=text]{font:inherit;font-size:13px;padding:7px 13px;border-radius:7px;
+       border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  input[type=text]{cursor:text;min-width:190px}
+  .prog{color:var(--ink2);font-size:13px;margin-left:auto}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+        padding:13px 15px;box-shadow:var(--shadow)}
+  .card.done{border-color:#a8d5bb;background:var(--ok-soft)}
+  .card.weak{border-color:#f0b694;background:var(--weak-soft)}
+  .top{display:flex;align-items:baseline;gap:9px;margin-bottom:6px}
+  .id{font-weight:700;font-size:14px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .chap{font-size:12px;color:var(--ink2)}
+  .sec{font-size:12px;color:var(--ink2);margin-left:auto}
+  .q{font-weight:600;margin:6px 0 4px}
+  .a{color:var(--ink);font-size:14px}
+  .a.hide{color:transparent;background:#e9edf5;border-radius:4px}
+  .why{font-size:12.5px;color:var(--ink2);margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+  .acts{display:flex;gap:6px;margin-top:9px}
+  .acts button{padding:4px 10px;font-size:12px}
+  .foot{margin-top:20px;color:var(--ink2);font-size:12.5px;line-height:1.9}
+  .kbd{background:#eef1f7;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>《哲学的贫困》背诵台</h1>
+  <div class="sub">39 个节点 · 八字钥匙 值 币 余 · 法 器 争 租 盟 · 进度存本机浏览器</div>
+
+  <div class="bar">
+    <button id="mBrowse" class="on">浏览</button>
+    <button id="mTest">自测（先遮答案）</button>
+    <button id="mWeak">只练未掌握</button>
+    <select id="fChap">
+      <option value="">全部章节</option>
+      <option value="序">序</option>
+      <option value="一">第一章 科学的发现</option>
+      <option value="二">第二章 政治经济学的形而上学</option>
+    </select>
+    <input type="text" id="q" placeholder="搜索编号 / 关键词">
+    <button id="reset">重置进度</button>
+    <span class="prog" id="prog"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    <div><b>怎么用</b>：<span class="kbd">浏览</span> 全部展开对照记；<span class="kbd">自测</span> 先自己答再点"显示"；
+      <span class="kbd">只练未掌握</span> 只留你标"未掌握"的卡。</div>
+    <div><b>记忆顺序建议</b>：先背 L0 八字 → 再按编号 0.1 → 2.27 走一遍 → 最后只练未掌握。</div>
+    <div>配套文件：<code>00_总纲地图.md</code>（八节对八字）· <code>01_论证逻辑·全书拆解.md</code>（39 节点详解）·
+      <code>03_背诵手册·从骨架到全文.md</code>（四层结构）· <code>04_必背锚句·原文定位表.md</code>（68 句一级锚句）。</div>
+  </div>
+</div>
+
+<script>
+var DATA = [
+["0.1","序","缘起","马克思为什么写这本书？","1846年12月读蒲鲁东《贫困的哲学》→12月28日致安年科夫信→1847年1月动笔、4月初完稿、7月初在布鲁塞尔和巴黎出版。","确立\"应战\"性质，后面所有写法都由它决定"],
+["0.2","序","书名与靶子","《贫困的哲学》和《哲学的贫困》，差在哪？","不是贫困的哲学（用哲学考察贫困），而是哲学的贫困（你的哲学本身是贫困的）。一个词的换位，预告了两章的分工。","点明书名机关，预告结构"],
+["0.3","序","战法","马克思为什么不按自己的体系写？","因为是\"答\"，所以镜像蒲鲁东的结构，一章一节跟着蒲鲁东走。马克思自己说\"只是跟着蒲鲁东先生的'矛盾'走\"。","让对方无从说你歪曲"],
+["1.1","一","使用价值和交换价值","蒲鲁东自称的\"科学发现\"是什么？","稀少→交换价值；众多→使用价值；二者综合=他所谓的\"构成价值\"。","立靶：把对方命题原样摆出再打"],
+["1.2","一","使用价值和交换价值","马克思划的第一刀是什么？","你忘了需求。\"任何东西只有在对它有需求的条件下，才说得上多或少。\"他撇开需求，就是把交换价值和稀少、使用价值和众多混为一谈。","指出对方靠漏掉一个变量换来\"发现\""],
+["1.3","一","使用价值和交换价值","供给和需求到底是什么在打交道？","两边都是交换价值的总和。生产者供给的\"主要是某种交换价值\"，需求者的货币\"也是产品，也是交换价值\"。不是效用对意见。","把框架从\"效用vs意见\"重构为\"交换价值vs交换价值\""],
+["1.4","一","构成价值","劳动时间决定价值，往下推会推出什么？","\"由劳动时间衡量的相对价值注定是工人遭受现代奴役的公式\"，不是解放理论。麻布和呢绒等价交换不改变生产者的相互地位。","用对方承认的权威推出相反结论"],
+["1.5","一","构成价值","蒲鲁东混淆了哪两样？","商品所包含的劳动量 vs 劳动价值。后者不能做尺度：\"象任何其他的商品价值一样，劳动价值不能作为价值尺度。\"\"用本身还需要确定的相对价值来确定相对价值。\"","给\"循环论证\"定性"],
+["1.6","一","构成价值","蒲鲁东的循环具体长什么样？","找相对价值的尺度是为了找平等报酬；又把工资平等当已知去找相对价值。\"多么奇妙的辩证法！\"","把逻辑错误升格为方法错误，引出第二章"],
+["1.7","一","构成价值","甲工作12小时、乙工作6小时，等量交换会怎样？","四条路全垮：白干／偷懒的竞争／多得空闲（把懒惰当最大幸福）／停止交换都变鲁滨逊。\"这样的协定就是个人交换的死刑。\"","打最强的平等方案（布雷）"],
+["1.8","一","货币","金银凭什么成为货币？","分两层：必要性由\"当前的生产组织需要普遍的交换手段\"决定（生产关系问题）；为什么偏偏是金银由金银的物质特性决定（次要问题）。\"法律只是事实的公认。\"\"货币不是东西，而是一种社会关系。\"","在最有利于蒲鲁东的例子上打败他"],
+["1.9","一","劳动的剩余","1840年英国工人为什么不比1770年富裕27倍？","因为生产那些财富的历史条件，正是\"建立在阶级对抗上的一切\"。\"没有对抗就没有进步。这是文明直到今天所遵循的规律。\"","第一章收尾于阶级，为第五节埋伏笔"],
+["2.1","二","第一节 方法","为什么第二章突然讲起黑格尔？","\"一个英国人把人变成帽子（李嘉图），一个德国人把帽子变成观念（黑格尔）。\"是蒲鲁东把话题从经济学滑向了哲学，马克思跟着走。","第一章到第二章的铰链"],
+["2.2","二","第一节 方法","蒲鲁东的\"历史\"是什么历史？","\"不是与时间次序相一致的历史，而是与观念顺序相一致的历史。\"他把冒牌的黑格尔词句扔向法国人。","把靶子从结论移到方法"],
+["2.3","二","第一节 方法","经济范畴到底是什么？（全书最重要）","\"经济范畴只不过是生产的社会关系的理论表现，即其抽象。\"四级链：生产力→生产方式→社会关系→原理观念范畴。\"手推磨产生的是封建主的社会，蒸汽磨产生的是工业资本家的社会。\"它们\"是历史的、暂时的产物\"。","立尺子：唯物史观的第一次科学概述"],
+["2.4","二","第一节 方法","能不能一个范畴一个范畴地\"辩证产生\"？","不能。\"每一个社会中的生产关系都形成一个统一的整体。\"要构成价值就非有分工、竞争等等不可，可它们在他的序列里还不存在。","尺子的第一次试用"],
+["2.5","二","第一节 方法","蒲鲁东怎么把辩证法弄坏的？","把每个范畴切成好坏两半，拿一个范畴去消毒另一个。\"谁要给自己提出消除坏的方面的问题，就是立即切断了辩证运动。\"极端例子：奴隶制也有\"好的方面\"。","指出蒲鲁东对辩证法的具体篡改"],
+["2.6","二","第一节 方法","弄坏辩证法之后剩下什么？","\"辩证法没有了，至多还剩下最纯粹的道德。\"他给的历史\"是他本身矛盾的历史\"。","从破坏到废墟"],
+["2.7","二","第一节 方法","怎么追问一个观念的来历？","\"每个原理都有其出现的世纪。例如，权威原理出现在11世纪，个人主义原理出现在18世纪。\"然后追问那时的人们、需要、生产力、生产方式、原料、以及由此产生的人与人之间的关系。","给出可操作的方法论（四问清单）"],
+["2.8","二","第一节 方法","蒲鲁东在思想版图上的位置？","经济学家把资产阶级制度说成天然的；社会主义者是无产者阶级的理论家。蒲鲁东\"在两者之下\"。\"他希望成为合题，结果只不过是一种合成的错误。\"结果只是\"一个小资产者\"。","给蒲鲁东做阶级定位，并为第五节埋伏笔"],
+["2.9","二","第二节 分工和机器","分工是永恒的还是历史的？","\"市场的大小和它的面貌所赋予各个不同时代的分工的面貌和性质，单从一个'分'字……是很难推论出来的。\"\"历史的进程并不象范畴那样死板绝对。\"","量第一个范畴"],
+["2.10","二","第二节 分工和机器","蒲鲁东怎么证成分工有害？","先假设现代工厂，推出贫困；又用贫困推出工厂，把工厂当作这种贫困的辩证否定。靠\"普遍良心\"补论证。\"真是绝妙的辩证法！\"","拆具体推理"],
+["2.11","二","第二节 分工和机器","机器是经济范畴吗？","不是。\"机器正象拖犁的牛一样，并不是一个经济范畴。机器只是一种生产力。以应用机器为基础的现代工厂才是生产上的社会关系，才是经济范畴。\"","全书最有名的区分：生产力vs生产关系"],
+["2.12","二","第二节 分工和机器","是分工产生了工厂，还是相反？","历史上是\"生产工具和劳动者的积累与积聚，发生在作坊内部分工发展以前\"。\"劳动者集合在一个作坊是分工发展的前提。\"","用史实反推因果方向"],
+["2.13","二","第二节 分工和机器","工具积聚和分工是什么关系？","互为因果。\"工具积聚发展了，分工也随之发展，并且反过来也一样。\"机械发明使分工加剧，分工加剧又引起新发明。","把史实提炼为普遍命题"],
+["2.14","二","第二节 分工和机器","工厂制度对工人做了什么？","引尤尔：\"现代工厂主的最大目标，就是通过科学和资本的结合，将工人的作用降低到仅仅使用他们的注意力和灵敏性。\"1825年起每次重要罢工后总出现一种新机器。","用敌人的证词"],
+["2.15","二","第二节 分工和机器","分工对人的影响是什么？","社会内部分工\"产生了特长和专业，同时也产生职业的痴呆\"；而工厂\"消除着专业和职业的痴呆\"。勒蒙特：\"这样一来，人是缩小了。\"","辩证判断：坏里长出好的前提"],
+["2.16","二","第三节 竞争和垄断","竞争是什么竞赛？","\"竞争不是工业竞赛而是商业竞赛。\"\"如果我们以为只须颁布几道法令就可以摆脱竞争，那末我们就永远摆脱不了竞争。\"\"整个历史也无非是人类本性的不断改变而已。\"","纠正定义，堵死法令路线"],
+["2.17","二","第三节 竞争和垄断","竞争和垄断的合题是什么？","\"这个合题并不是公式，而是运动。\"正题：竞争前的封建垄断；反题：竞争；合题：现代垄断。\"垄断只有不断投入竞争的斗争才能维持自己。\"","给出不是公式的合题"],
+["2.18","二","第三节 竞争和垄断","所有权是什么？","\"给资产阶级的所有权下定义不外是把资产阶级生产的全部社会关系描述一番。\"想把它当永恒观念下定义，\"这只能是形而上学或法学的幻想\"。","降格所有权，并引出第四节"],
+["2.19","二","第四节 地租","农产品的价格由什么决定？","与工业相反：\"使用劳动量最多的产品的价格决定一切同类产品的价格。\"因为土地不能像机器那样随便增加。优等地超过生产费用的余额=地租。若肥力可任意复制，地租就消失。","先立李嘉图这把尺子"],
+["2.20","二","第四节 地租","地租来自土壤肥力吗？","不。\"地租来自社会，而不是来自土壤。\"机制是\"由竞争产生而绝不是由土壤肥沃程度不等产生的价格均等化\"。\"地租是将田园生活卷入历史运动的动力。\"","最干净的\"降格\"标本"],
+["2.21","二","第四节 地租","地租是\"永恒资本（土地）的利息\"吗？","\"只要土地不被用做生产资料，它就不是资本。\"土地作为物质是永恒的，土地资本不是。土地资本的代表是经营者不是所有者；它带来的收入是利息和经营利润，不是地租。","拆蒲鲁东的混淆"],
+["2.22","二","第四节 地租","农业改良会使地租上升吗？","恰恰相反。\"这种改进迫使地租周期地下降。\"改良让人不必耕种劣等地，也就不必产生那种价格差。17世纪英国所有者因此反对农业成就。","拿对方的证据反打"],
+["2.23","二","第五节 罢工和同盟","提高工资会引起物价普遍上涨吗？","\"除了二加二等于四以外，我们否定上述一切论点。\"普遍上涨不可能（只是说法变了）；普遍提高工资使利润降低而价格不变；固定资本多的部门还要降价。","拆蒲鲁东反对罢工的全部理由"],
+["2.24","二","第五节 罢工和同盟","罢工有什么正面作用？","\"机器可以说是资本家用来对付熟练劳动者反抗的武器。\"即使同盟的结果只是引起机械发明，\"同盟和罢工对工业的发展也是有巨大影响的\"。\"不幸蒲鲁东先生竟把工头当成普通工人。\"","给罢工一个正面的历史作用"],
+["2.25","二","第五节 罢工和同盟","工人组织同盟违法吗？","英国1825年议会不得不废除禁止工人组织同盟的法律。\"同盟一经成为经济事实并日益稳定，它们也必然很快地成为合法的事实。\"法国刑法典条文只证明那时法国现代工业还不发达。","把蒲鲁东的因果整个掉头"],
+["2.26","二","第五节 罢工和同盟","无产阶级怎么成为阶级？","\"这批人对资本说来已经形成一个阶级，但还不是自为的阶级。在斗争中……形成一个自为的阶级。\"\"阶级同阶级的斗争就是政治斗争。\"\"在一切生产工具中，最强大的一种生产力是革命阶级本身。\"","全书转折点：从批判转向结论"],
+["2.27","二","第五节 罢工和同盟","旧社会崩溃后会出现新的阶级统治吗？","\"不是。\"\"劳动阶级解放的条件就是要消灭一切阶级。\"\"从此再不会有原来意义的政权了。因为政权正是市民社会内部阶级对抗的正式表现。\"末句引乔治·桑：\"不是战斗，就是死亡；不是血战，就是毁灭。\"","全书终点"]
+];
+
+var KEY = 'poverty_of_philosophy_mem_v1';
+var state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+var mode = 'browse';
+
+function chapKey(c) {
+  if (c === '序') return '序';
+  if (c === '一') return '一';
+  return '二';
+}
+
+function render() {
+  var grid = document.getElementById('grid');
+  var fv = document.getElementById('fChap').value;
+  var qv = document.getElementById('q').value.trim().toLowerCase();
+  var html = '', shown = 0, doneN = 0, weakN = 0;
+
+  for (var i = 0; i < DATA.length; i++) {
+    var r = DATA[i], id = r[0], ch = r[1], sec = r[2], qs = r[3], ans = r[4], why = r[5];
+    var st = state[id] || '';
+    if (st === 'done') doneN++;
+    if (st === 'weak') weakN++;
+    if (fv && chapKey(ch) !== fv) continue;
+    if (mode === 'weak' && st !== 'weak') continue;
+    if (qv) {
+      var hay = (id + ' ' + ch + ' ' + sec + ' ' + qs + ' ' + ans + ' ' + why).toLowerCase();
+      if (hay.indexOf(qv) < 0) continue;
+    }
+    shown++;
+    var cls = st === 'done' ? ' done' : (st === 'weak' ? ' weak' : '');
+    var hide = (mode === 'test') ? ' hide' : '';
+    html += '<div class="card' + cls + '">'
+      + '<div class="top"><span class="id">' + id + '</span>'
+      + '<span class="chap">' + ch + '</span>'
+      + '<span class="sec">' + sec + '</span></div>'
+      + '<div class="q">问：' + qs + '</div>'
+      + '<div class="a' + hide + '" data-i="' + i + '">答：' + ans + '</div>'
+      + '<div class="why">干什么：' + why + '</div>'
+      + '<div class="acts">'
+      + '<button onclick="show(' + i + ')">显示</button>'
+      + '<button onclick="mark(\'' + id + '\',\'done\')">已掌握</button>'
+      + '<button onclick="mark(\'' + id + '\',\'weak\')">未掌握</button>'
+      + '</div></div>';
+  }
+  grid.innerHTML = html || '<div class="card">没有匹配的节点。</div>';
+  document.getElementById('prog').textContent =
+    '已掌握 ' + doneN + ' / 未掌握 ' + weakN + ' / 共 ' + DATA.length + '　（当前显示 ' + shown + '）';
+}
+
+function show(i) {
+  var els = document.querySelectorAll('.a[data-i="' + i + '"]');
+  for (var k = 0; k < els.length; k++) els[k].classList.remove('hide');
+}
+function mark(id, v) {
+  if (state[id] === v) { delete state[id]; } else { state[id] = v; }
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  render();
+}
+function setMode(m) {
+  mode = m;
+  document.getElementById('mBrowse').className = (m === 'browse' ? 'on' : '');
+  document.getElementById('mTest').className = (m === 'test' ? 'on' : '');
+  document.getElementById('mWeak').className = (m === 'weak' ? 'on' : '');
+  render();
+}
+document.getElementById('mBrowse').onclick = function () { setMode('browse'); };
+document.getElementById('mTest').onclick = function () { setMode('test'); };
+document.getElementById('mWeak').onclick = function () { setMode('weak'); };
+document.getElementById('fChap').onchange = render;
+document.getElementById('q').oninput = render;
+document.getElementById('reset').onclick = function () {
+  if (confirm('确定清空全部进度？')) { state = {}; try { localStorage.removeItem(KEY); } catch (e) {} render(); }
+};
+render();
+</script>
+</body>
+</html>
